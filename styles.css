@@ -453,11 +453,17 @@ img {
 
 .media-grid {
   display: grid;
-  grid-template-columns: 1fr 1fr;
-  gap: clamp(1.4rem, 3vw, 2.4rem);
+  grid-template-columns: repeat(3, 1fr);
+  gap: clamp(1.2rem, 2.4vw, 2rem);
 }
 
-@media (max-width: 760px) {
+@media (max-width: 900px) {
+  .media-grid {
+    grid-template-columns: 1fr 1fr;
+  }
+}
+
+@media (max-width: 560px) {
   .media-grid {
     grid-template-columns: 1fr;
   }
