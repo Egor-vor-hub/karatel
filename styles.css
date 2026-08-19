@@ -40,6 +40,22 @@ img {
   color: var(--void);
 }
 
+.cursor-glow {
+  position: fixed;
+  inset: 0;
+  z-index: 6;
+  pointer-events: none;
+  background: radial-gradient(420px 420px at var(--mx, 50%) var(--my, 50%),
+    rgba(217, 168, 96, 0.14), transparent 65%);
+  mix-blend-mode: screen;
+  opacity: 0;
+  transition: opacity 0.3s ease;
+}
+
+.cursor-glow.is-active {
+  opacity: 1;
+}
+
 .skip-link {
   position: absolute;
   top: -3rem;
@@ -247,22 +263,6 @@ img {
 .stage:hover::before { transform: translateY(-50%) rotate(-135deg) translateX(0); }
 .stage:hover::after { transform: translateY(-50%) rotate(45deg) translateX(0); }
 
-.glint {
-  position: absolute;
-  inset: 0;
-  z-index: 3;
-  pointer-events: none;
-  background: radial-gradient(240px 240px at var(--gx, 50%) var(--gy, 50%),
-    rgba(217, 168, 96, 0.16), transparent 60%);
-  opacity: 0;
-  transition: opacity 0.25s ease;
-}
-
-.stage:hover .glint,
-.stage:focus-visible .glint {
-  opacity: 1;
-}
-
 .stage-controls {
   display: flex;
   flex-direction: column;
@@ -400,8 +400,9 @@ img {
   grid-template-columns: 1fr 1fr;
   max-width: 88rem;
   margin: 0 auto;
-  gap: 1px;
-  background: var(--line);
+  gap: clamp(1rem, 3vw, 1.75rem);
+  padding: 0 clamp(1rem, 3vw, 1.75rem);
+  background: var(--void);
   border-bottom: 1px solid var(--line);
 }
 
@@ -584,10 +585,6 @@ img {
 
   .frame {
     transition: none;
-  }
-
-  .glint {
-    display: none;
   }
 
   .reveal {

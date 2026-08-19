@@ -4,7 +4,6 @@
   const framesWrap = stage.querySelector(".frames");
   const dots = Array.from(document.querySelectorAll(".dot"));
   const dragHint = document.getElementById("dragHint");
-  const glint = stage.querySelector(".glint");
 
   const reduceMotion = window.matchMedia("(prefers-reduced-motion: reduce)").matches;
 
@@ -37,11 +36,6 @@
     framesWrap.style.transform = `rotateX(${rx}deg) rotateY(${ry}deg)`;
   }
 
-  function setGlint(px, py) {
-    stage.style.setProperty("--gx", `${px}%`);
-    stage.style.setProperty("--gy", `${py}%`);
-  }
-
   function pointerPercent(e) {
     const rect = stage.getBoundingClientRect();
     return {
@@ -52,7 +46,6 @@
 
   stage.addEventListener("pointermove", (e) => {
     const { px, py } = pointerPercent(e);
-    setGlint(px, py);
 
     if (dragging) {
       dragDelta = e.clientX - startX;
@@ -135,4 +128,31 @@
   );
 
   targets.forEach((t) => observer.observe(t));
+})();
+
+(() => {
+  const canHover = window.matchMedia("(hover: hover)").matches;
+  const reduceMotion = window.matchMedia("(prefers-reduced-motion: reduce)").matches;
+  if (!canHover || reduceMotion) return;
+
+  const glow = document.createElement("div");
+  glow.className = "cursor-glow";
+  glow.setAttribute("aria-hidden", "true");
+  document.body.appendChild(glow);
+
+  let raf = null;
+
+  window.addEventListener("pointermove", (e) => {
+    if (raf) return;
+    raf = requestAnimationFrame(() => {
+      glow.style.setProperty("--mx", `${(e.clientX / window.innerWidth) * 100}%`);
+      glow.style.setProperty("--my", `${(e.clientY / window.innerHeight) * 100}%`);
+      glow.classList.add("is-active");
+      raf = null;
+    });
+  });
+
+  document.documentElement.addEventListener("mouseleave", () => {
+    glow.classList.remove("is-active");
+  });
 })();
